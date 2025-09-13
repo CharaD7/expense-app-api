@@ -5,13 +5,13 @@ interface Data {
 		amount: number;
 		createdAt: Date;
 		updatedAt: Date;
-		reportType: ReportType
+		reportType: ReportType;
 	}[];
 }
 
 export enum ReportType {
-  EXPENSE = 'expense',
-  INCOME = 'income',
+	EXPENSE = 'expense',
+	INCOME = 'income',
 }
 
 export const data: Data = {
@@ -48,6 +48,5 @@ export const data: Data = {
 			updatedAt: new Date(),
 			reportType: ReportType.EXPENSE,
 		},
-	]
+	],
 };
-

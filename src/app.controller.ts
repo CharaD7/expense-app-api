@@ -1,36 +1,69 @@
-import { Controller, Get, Post, Put, Delete, Param, ParseEnumPipe } from '@nestjs/common';
+import {
+	Controller,
+	Get,
+	Post,
+	Put,
+	Delete,
+	Param,
+	BadRequestException,
+	ParseEnumPipe,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { ReportType } from './data';
+import { ApiTags, ApiParam, ApiResponse, ApiOperation } from '@nestjs/swagger';
 
+@ApiTags('Reports')
 @Controller('report/')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+	constructor(private readonly appService: AppService) {}
 
-  @Get(':reportType')
-  getAllReports(
-		@Param('reportType', new ParseEnumPipe(ReportType)) reportType: ReportType
+	@Get(':reportType')
+	@ApiOperation({ summary: 'Get all reports of a specific type' })
+	@ApiParam({
+		name: 'reportType',
+		enum: ReportType,
+		required: true,
+		description: 'Type of report to retrieve',
+	})
+	@ApiResponse({ status: 200, description: 'Reports retrieved successfully' })
+	@ApiResponse({ status: 400, description: 'Invalid report type' })
+	getAllReports(
+		@Param(
+			'reportType',
+			new ParseEnumPipe(ReportType, {
+				exceptionFactory: (error) =>
+					new BadRequestException(
+						'Invalid report type. Allowed values are: income, and expense.',
+					),
+			}),
+		)
+		reportType: ReportType,
 	): string {
-    return this.appService.getAllReports(reportType);
-  }
+		return this.appService.getAllReports(reportType);
+	}
 
 	@Get(':id')
+	@ApiOperation({ summary: 'Get a report by its ID' })
+	@ApiParam({ name: 'id', description: 'ID of the report to retrieve' })
 	getReportById(): string {
 		return this.appService.getReportById();
-	};
+	}
 
 	@Post()
+	@ApiOperation({ summary: 'Create a new report' })
 	createReport(): string {
 		return this.appService.createReport();
-	};
+	}
 
 	@Put(':id')
+	@ApiOperation({ summary: 'Update a report by its ID' })
 	upateReport(): string {
 		return this.appService.updateReport();
-	};
+	}
 
 	@Delete(':id')
+	@ApiOperation({ summary: 'Delete a report by its ID' })
 	deleteReportById(): string {
 		return this.appService.deleteReportById();
-	};
-
+	}
 }
