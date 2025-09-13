@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Put, Delete, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, ParseEnumPipe } from '@nestjs/common';
 import { AppService } from './app.service';
+import { ReportType } from './data';
 
 @Controller('report/')
 export class AppController {
@@ -7,7 +8,7 @@ export class AppController {
 
   @Get(':reportType')
   getAllReports(
-		@Param('reportType') reportType: 'string'
+		@Param('reportType', new ParseEnumPipe(ReportType)) reportType: ReportType
 	): string {
     return this.appService.getAllReports(reportType);
   }
