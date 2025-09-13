@@ -6,30 +6,30 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get(':reportType')
-  getAllIncomeReport(
+  getAllReports(
 		@Param('reportType') reportType: 'string'
 	): string {
-    return this.appService.getAllIncomeReport(reportType);
+    return this.appService.getAllReports(reportType);
   }
 
 	@Get(':id')
-	getIncomeReportById(): string {
-		return this.appService.getIncomeReportById();
+	getReportById(): string {
+		return this.appService.getReportById();
 	};
 
 	@Post()
-	createIncomeReport(): string {
-		return this.appService.createIncomeReport();
+	createReport(): string {
+		return this.appService.createReport();
 	};
 
 	@Put(':id')
-	upateIncomeReport(): string {
-		return this.appService.updateIncomeReport();
+	upateReport(): string {
+		return this.appService.updateReport();
 	};
 
 	@Delete(':id')
-	deleteIncomeReportById(): string {
-		return this.appService.deleteIncomeReportById();
+	deleteReportById(): string {
+		return this.appService.deleteReportById();
 	};
 
 }
