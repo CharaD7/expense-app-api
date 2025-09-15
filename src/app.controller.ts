@@ -7,10 +7,12 @@ import {
 	Param,
 	BadRequestException,
 	ParseEnumPipe,
+	Body,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ReportType } from './data';
-import { ApiTags, ApiParam, ApiResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiParam, ApiResponse, ApiOperation, ApiBody } from '@nestjs/swagger';
+import { CreateReportDto } from './dto/create-report-dto';
 
 @ApiTags('Reports')
 @Controller('report/')
@@ -42,7 +44,7 @@ export class AppController {
 		return this.appService.getAllReports(type);
 	}
 
-@Get(':type/:id')
+	@Get(':type/:id')
 	@ApiOperation({ summary: 'Get a report by its ID' })
 	@ApiParam({ name: 'id', description: 'ID of the report to retrieve' })
 	@ApiParam({ name: 'type', description: 'Type of the report to retrieve' })
@@ -62,10 +64,25 @@ export class AppController {
 		return this.appService.getReportById(id, type);
 	}
 
-	@Post()
+	@Post(':type')
 	@ApiOperation({ summary: 'Create a new report' })
-	createReport(): string {
-		return this.appService.createReport();
+	@ApiBody({ type: CreateReportDto })
+	@ApiResponse({ status: 201, description: 'Report created successfully' })
+	@ApiResponse({ status: 400, description: 'Invalid report type' })
+	@ApiResponse({ status: 404, description: 'Action not found' })
+	createReport(
+		@Body() body: CreateReportDto,
+		@Param('type',
+			new ParseEnumPipe(ReportType,
+				{
+					exceptionFactory: () => new BadRequestException(
+						'Invalid report type. Allowed values are: income, expense.'
+					),
+				}
+			)
+		) type: ReportType
+	): string {
+		return this.appService.createReport(body.amount, body.source, type);
 	}
 
 	@Put(':id')

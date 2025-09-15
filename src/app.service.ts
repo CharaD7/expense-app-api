@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { data, ReportType } from 'src/data';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class AppService {
@@ -20,8 +21,17 @@ export class AppService {
 		return report ? JSON.stringify(report) : `Report with ID ${id} and type ${type} not found.`;
 	}
 
-	createReport(): string {
-		return 'Creating new data ...';
+	createReport(amount: number, source: string, type: ReportType): string {
+		const newReport = {
+			id: uuid(),
+			amount,
+			source,
+			createdAt: new Date(),
+			updatedAt: new Date(),
+			type,
+		};
+		data.report.push(newReport);
+		return JSON.stringify(newReport);
 	}
 
 	updateReport(id: string): string {
