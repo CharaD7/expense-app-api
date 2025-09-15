@@ -34,8 +34,23 @@ export class AppService {
 		return JSON.stringify(newReport);
 	}
 
-	updateReport(id: string): string {
-		return 'Updating data for ID...';
+	updateReport(
+		id: string,
+		body: { amount: number, source: string }
+	): string {
+
+		const report = data.report.find((r) => r.id === id);
+		if (!report) {
+			throw new Error(`Report with ID ${id} not found.`);
+		}
+		// Security: Only allow update if amount and source are valid
+		if (typeof body.amount !== 'number' || body.amount < 0 || !body.source || typeof body.source !== 'string') {
+			throw new Error('Invalid input data.');
+		}
+		report.amount = body.amount;
+		report.source = body.source;
+		report.updatedAt = new Date();
+		return JSON.stringify(report);
 	}
 
 	deleteReportById(id: string): string {

@@ -19,7 +19,7 @@ import { CreateReportDto } from './dto/create-report-dto';
 export class AppController {
 	constructor(private readonly appService: AppService) {}
 
-	@Get(':reportType')
+	@Get(':type')
 	@ApiOperation({ summary: 'Get all reports of a specific type' })
 	@ApiParam({
 		name: 'type',
@@ -47,7 +47,12 @@ export class AppController {
 	@Get(':type/:id')
 	@ApiOperation({ summary: 'Get a report by its ID' })
 	@ApiParam({ name: 'id', description: 'ID of the report to retrieve' })
-	@ApiParam({ name: 'type', description: 'Type of the report to retrieve' })
+	@ApiParam({
+		name: 'type',
+		enum: ReportType,
+		required: true,
+		description: 'Type of report to retrieve',
+	})
 	@ApiResponse({ status: 200, description: 'Reports retrieved successfully' })
 	@ApiResponse({ status: 400, description: 'Invalid report type/id' })
 	@ApiResponse({ status: 404, description: 'Report not found' })
@@ -66,6 +71,12 @@ export class AppController {
 
 	@Post(':type')
 	@ApiOperation({ summary: 'Create a new report' })
+	@ApiParam({
+		name: 'type',
+		enum: ReportType,
+		required: true,
+		description: 'Type of report to retrieve',
+	})
 	@ApiBody({ type: CreateReportDto })
 	@ApiResponse({ status: 201, description: 'Report created successfully' })
 	@ApiResponse({ status: 400, description: 'Invalid report type' })
@@ -87,10 +98,21 @@ export class AppController {
 
 	@Put(':id')
 	@ApiOperation({ summary: 'Update a report by its ID' })
+	@ApiParam({ name: 'id', description: 'ID of the report to update' })
+	@ApiBody({ type: CreateReportDto })
+	@ApiParam({
+		name: 'type',
+		enum: ReportType,
+		required: true,
+		description: 'Type of report to retrieve',
+	})
+	@ApiResponse({ status: 200, description: 'Report updated successfully' })
+	@ApiResponse({ status: 400, description: 'Invalid input or report not found' })
 	upateReport(
-		@Param('id') id: string
+		@Param('id') id: string,
+		@Body() body: CreateReportDto
 	): string {
-		return this.appService.updateReport(id);
+		return this.appService.updateReport(id, body);
 	}
 
 	@Delete(':id')
