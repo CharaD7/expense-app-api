@@ -20,7 +20,7 @@ export class AppController {
 	@Get(':reportType')
 	@ApiOperation({ summary: 'Get all reports of a specific type' })
 	@ApiParam({
-		name: 'reportType',
+		name: 'type',
 		enum: ReportType,
 		required: true,
 		description: 'Type of report to retrieve',
@@ -29,7 +29,7 @@ export class AppController {
 	@ApiResponse({ status: 400, description: 'Invalid report type' })
 	getAllReports(
 		@Param(
-			'reportType',
+			'type',
 			new ParseEnumPipe(ReportType, {
 				exceptionFactory: (error) =>
 					new BadRequestException(
@@ -37,19 +37,28 @@ export class AppController {
 					),
 			}),
 		)
-		reportType: ReportType,
+		type: ReportType,
 	): string {
-		return this.appService.getAllReports(reportType);
+		return this.appService.getAllReports(type);
 	}
 
-	@Get(':id')
+@Get(':type/:id')
 	@ApiOperation({ summary: 'Get a report by its ID' })
 	@ApiParam({ name: 'id', description: 'ID of the report to retrieve' })
 	@ApiParam({ name: 'type', description: 'Type of the report to retrieve' })
+	@ApiResponse({ status: 200, description: 'Reports retrieved successfully' })
+	@ApiResponse({ status: 400, description: 'Invalid report type/id' })
+	@ApiResponse({ status: 404, description: 'Report not found' })
 	getReportById(
 		@Param('id') id: string,
-		@Param('type') type: string
-	) {
+		@Param('type',
+			new ParseEnumPipe(ReportType,
+				{
+					exceptionFactory: () => new BadRequestException('Invalid report type. Allowed values are: income, expense.'),
+				}
+			)
+		) type: ReportType
+	): string {
 		return this.appService.getReportById(id, type);
 	}
 
