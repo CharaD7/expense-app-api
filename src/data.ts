@@ -5,7 +5,7 @@ interface Data {
 		amount: number;
 		createdAt: Date;
 		updatedAt: Date;
-		reportType: ReportType;
+		type: ReportType;
 	}[];
 }
 
@@ -22,7 +22,7 @@ export const data: Data = {
 			amount: 9000,
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			reportType: ReportType.INCOME,
+			type: ReportType.INCOME,
 		},
 		{
 			id: 'uuid2',
@@ -30,7 +30,7 @@ export const data: Data = {
 			amount: 19000,
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			reportType: ReportType.INCOME,
+			type: ReportType.INCOME,
 		},
 		{
 			id: 'uuid3',
@@ -38,7 +38,7 @@ export const data: Data = {
 			amount: 2000,
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			reportType: ReportType.EXPENSE,
+			type: ReportType.EXPENSE,
 		},
 		{
 			id: 'uuid4',
@@ -46,7 +46,7 @@ export const data: Data = {
 			amount: 400,
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			reportType: ReportType.EXPENSE,
+			type: ReportType.EXPENSE,
 		},
 	],
 };
