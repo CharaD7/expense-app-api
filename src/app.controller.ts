@@ -45,8 +45,12 @@ export class AppController {
 	@Get(':id')
 	@ApiOperation({ summary: 'Get a report by its ID' })
 	@ApiParam({ name: 'id', description: 'ID of the report to retrieve' })
-	getReportById(): string {
-		return this.appService.getReportById();
+	@ApiParam({ name: 'type', description: 'Type of the report to retrieve' })
+	getReportById(
+		@Param('id') id: string,
+		@Param('type') type: string
+	) {
+		return this.appService.getReportById(id, type);
 	}
 
 	@Post()
@@ -57,13 +61,17 @@ export class AppController {
 
 	@Put(':id')
 	@ApiOperation({ summary: 'Update a report by its ID' })
-	upateReport(): string {
-		return this.appService.updateReport();
+	upateReport(
+		@Param('id') id: string
+	): string {
+		return this.appService.updateReport(id);
 	}
 
 	@Delete(':id')
 	@ApiOperation({ summary: 'Delete a report by its ID' })
-	deleteReportById(): string {
-		return this.appService.deleteReportById();
+	deleteReportById(
+		@Param('id') id: string
+	): string {
+		return this.appService.deleteReportById(id);
 	}
 }
