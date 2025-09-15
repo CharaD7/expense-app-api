@@ -10,19 +10,24 @@ export class AppService {
 		return JSON.stringify(filteredReport);
 	}
 
-	getReportById(): string {
-		return 'Report for ID...';
+	getReportById(id: string, type: string): string {
+		const reportType = type === 'expense' ? ReportType.EXPENSE : ReportType.INCOME;
+		const report = 
+			data.report
+			.filter((report) => report.type === reportType)
+			.find((report) => report.id === id) ;
+		return report ? JSON.stringify(report) : `Report with ID ${id} and type ${type} not found.`;
 	}
 
 	createReport(): string {
 		return 'Creating new data ...';
 	}
 
-	updateReport(): string {
+	updateReport(id: string): string {
 		return 'Updating data for ID...';
 	}
 
-	deleteReportById(): string {
+	deleteReportById(id: string): string {
 		return 'Deleting data for ID...';
 	}
 }
