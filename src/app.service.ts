@@ -3,9 +3,10 @@ import { data, ReportType } from 'src/data';
 
 @Injectable()
 export class AppService {
-	getAllReports(reportType: ReportType): string {
+	getAllReports(type: ReportType): string {
+		const reportType = type === 'expense' ? ReportType.EXPENSE : ReportType.INCOME;
 		const filteredReport = data.report.filter(
-			(report) => report.reportType === reportType,
+			(report) => report.type === reportType
 		);
 		return JSON.stringify(filteredReport);
 	}
