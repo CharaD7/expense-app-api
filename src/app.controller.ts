@@ -108,18 +108,31 @@ export class AppController {
 	})
 	@ApiResponse({ status: 200, description: 'Report updated successfully' })
 	@ApiResponse({ status: 400, description: 'Invalid input or report not found' })
+	@ApiResponse({ status: 403, description: 'Report type mismatch' })
 	upateReport(
+		@Param('type', new ParseEnumPipe(ReportType)) type: ReportType,
 		@Param('id') id: string,
 		@Body() body: CreateReportDto
 	): string {
-		return this.appService.updateReport(id, body);
+		return this.appService.updateReport(id, type, body);
 	}
 
 	@Delete(':id')
 	@ApiOperation({ summary: 'Delete a report by its ID' })
+	@ApiParam({
+		name: 'type',
+		enum: ReportType,
+		required: true,
+		description: 'Type of report to retrieve',
+	})
+	@ApiParam({ name: 'id', description: 'ID of the report to delete' })
+	@ApiResponse({ status: 200, description: 'Report deleted successfully' })
+	@ApiResponse({ status: 404, description: 'Report not found' })
+	@ApiResponse({ status: 403, description: 'Report type mismatch' })
 	deleteReportById(
+		@Param('type', new ParseEnumPipe(ReportType)) type: ReportType,
 		@Param('id') id: string
 	): string {
-		return this.appService.deleteReportById(id);
+		return this.appService.deleteReportById(id, type);
 	}
 }

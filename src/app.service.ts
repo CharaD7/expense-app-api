@@ -36,12 +36,18 @@ export class AppService {
 
 	updateReport(
 		id: string,
+		type: ReportType,
 		body: { amount: number, source: string }
 	): string {
 
-		const report = data.report.find((r) => r.id === id);
+		const report = data.report.find((report) => report.id === id);
 		if (!report) {
 			throw new Error(`Report with ID ${id} not found.`);
+		}
+		if (report.type !== type) {
+			throw new Error(
+				`Report type mismatch. Expected income, or expense, got ${type}`
+			)
 		}
 		// Security: Only allow update if amount and source are valid
 		if (typeof body.amount !== 'number' || body.amount < 0 || !body.source || typeof body.source !== 'string') {
@@ -53,7 +59,17 @@ export class AppService {
 		return JSON.stringify(report);
 	}
 
-	deleteReportById(id: string): string {
-		return 'Deleting data for ID...';
+	deleteReportById(id: string, type: ReportType): string {
+		const index = data.report.findIndex((report) => report.id === id);
+		if (index === -1) {
+			throw new Error(`Report with ID ${id} not found.`);
+		}
+		if (data.report[index].type !== type) {
+			throw new Error(
+				`Report type mismatch. Expected ${data.report[index].type}, got ${type}`,
+			)
+		}
+		data.report.splice(index, 1);
+		return `Report with ID ${id} deleted successfully.`;
 	}
 }
